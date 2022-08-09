@@ -1,23 +1,17 @@
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function FormLogin() {
-  const navigate = useNavigate();
+  let navigate = useNavigate();
 
   const formSchema = yup.object().shape({
     email: yup.string().required("e-mail obrigatório").email("e-mail inválido"),
     password: yup.string().required("Senha obrigatória"),
   });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(formSchema) });
 
   function handleLogin(user) {
     api
@@ -36,6 +30,14 @@ export default function FormLogin() {
         toast.error("Login/senha inválidos");
       });
   }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(formSchema),
+  });
 
   return (
     <form onSubmit={handleSubmit(handleLogin)}>
